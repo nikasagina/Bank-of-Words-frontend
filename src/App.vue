@@ -1,21 +1,36 @@
 <template>
-    <div>
-        <h1>Hello, World!</h1>
+    <div id="app">
+        <nav>
+            <ul>
+                <li>
+                    <router-link to="/register">Register</router-link>
+                </li>
+                <li>
+                    <router-link to="/login">Login</router-link>
+                </li>
+                <li>
+                    <router-link to="/questions">Questions</router-link>
+                </li>
+                <li>
+                    <router-link to="/word-info">Word Info</router-link>
+                </li>
+                <li>
+                    <router-link to="/statistics">Statistics</router-link>
+                </li>
+            </ul>
+        </nav>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 
-
+export default defineComponent({
+    name: 'App',
+});
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+/* Add your component-specific styles here */
 </style>
