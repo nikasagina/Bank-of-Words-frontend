@@ -18,6 +18,7 @@
 <script>
 import apiService from '@/services/apiService';
 import { ref } from 'vue';
+import store from "@/store";
 
 export default {
     name: 'LoginComponent',
@@ -32,13 +33,13 @@ export default {
                 const response = await apiService.authenticate(username.value, password.value);
                 const token = response.data.token; // Assuming the token is present in the response's "data" field
                 if (token) {
-                    localStorage.setItem('token', token); // Save the token in localStorage
-                    loggedIn.value = true; // Set login status to true
-                    errorMessage.value = ""
+                    await store.dispatch('login', {token}); // Call the store's login action to update authentication state
+                    errorMessage.value = "";
+                    loggedIn.value = true
                 }
             } catch (error) {
                 console.error(error);
-                loggedIn.value = false;
+                loggedIn.value = true;
                 errorMessage.value = 'Authentication failed. Please check your username and password.'; // Update error message
             }
         }

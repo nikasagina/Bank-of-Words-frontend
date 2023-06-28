@@ -8,7 +8,7 @@
         <div v-if="wordData">
             <h3>{{ wordData.word }}</h3>
             <p>{{ wordData.definition }}</p>
-            <p>Other definitions: {{ wordData.otherDefinitions }}</p>
+            <p>Other definitions: {{ wordData.other_definitions }}</p>
             <p>Examples: {{ wordData.examples }}</p>
             <p>Synonyms: {{ wordData.synonyms }}</p>
             <p>Antonyms: {{ wordData.antonyms }}</p>

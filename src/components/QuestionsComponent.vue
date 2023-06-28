@@ -12,6 +12,11 @@
                 </label>
                 <button type="submit">Submit Answer</button>
             </form>
+            <div v-if="answerSubmitted">
+                <p v-if="answerIsCorrect">Your answer is correct!</p>
+                <p v-else>Sorry, your answer is incorrect. The correct answer is: {{ correctAnswer }}</p>
+                <button v-if="answerIsCorrect" @click="markWordAsLearned">Mark Word as Learned</button>
+            </div>
         </div>
     </div>
 </template>
@@ -25,11 +30,16 @@ export default {
     setup() {
         const questionData = ref(null);
         const answer = ref('');
+        const answerSubmitted = ref(false);
+        const answerIsCorrect = ref(false);
+        const correctAnswer = ref('');
 
         async function getQuestion() {
             try {
                 const response = await apiService.getQuestion();
                 questionData.value = response.data;
+                answerSubmitted.value = false;
+                answerIsCorrect.value = false;
             } catch (error) {
                 console.error(error);
             }
@@ -39,6 +49,8 @@ export default {
             try {
                 const response = await apiService.getSpellingQuestion();
                 questionData.value = response.data;
+                answerSubmitted.value = false;
+                answerIsCorrect.value = false;
             } catch (error) {
                 console.error(error);
             }
@@ -47,7 +59,20 @@ export default {
         async function submitAnswer() {
             try {
                 const response = await apiService.submitAnswer(answer.value, questionData.value.id);
-                console.log(response);
+                answerSubmitted.value = true;
+                const isCorrect = response.data.correct;
+                answerIsCorrect.value = isCorrect;
+                if (!isCorrect) {
+                    correctAnswer.value = response.data.answer;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function markWordAsLearned() {
+            try {
+                await apiService.markWordAsLearned(answer.value);
             } catch (error) {
                 console.error(error);
             }
@@ -56,9 +81,13 @@ export default {
         return {
             questionData,
             answer,
+            answerSubmitted,
+            answerIsCorrect,
+            correctAnswer,
             getQuestion,
             getSpellingQuestion,
-            submitAnswer
+            submitAnswer,
+            markWordAsLearned
         };
     }
 };

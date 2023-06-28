@@ -1,11 +1,24 @@
 <template>
     <div>
         <h2>Statistics</h2>
-        <button @click="getUserStatistics">Get Statistics</button>
+        <button @click="getUserStatistics">Get User Statistics</button>
+        <button @click="getGlobalStatistics">Get Global Statistics</button>
         <div v-if="statsData">
-            <p>Correct answers: {{ statsData.correctAnswers }}</p>
-            <p>Incorrect answers: {{ statsData.incorrectAnswers }}</p>
-            <p>Questions answered: {{ statsData.totalQuestions }}</p>
+            <div> User Statistics </div>
+            <p>Correct answers: {{ statsData.success_guesses_count }}</p>
+            <p>Incorrect answers: {{ statsData.total_guesses_count - statsData.success_guesses_count }}</p>
+            <p>Questions answered: {{ statsData.total_guesses_count }}</p>
+            <p>Success rate: {{ Math.floor(statsData.success_rate * 100) }}%</p>
+            <p>Most guessed word: {{ statsData.most_guessed_word }}</p>
+            <p>Least guessed word: {{ statsData.least_guessed_word }}</p>
+        </div>
+
+        <div v-if="globalStatsData">
+            <div> Global Statistics </div>
+            <p>Top user: {{ globalStatsData.top_user }}</p>
+            <p>Most guessed word: {{ globalStatsData.most_guessed_word }}</p>
+            <p>Least guessed word: {{ globalStatsData.least_guessed_word }}</p>
+
         </div>
     </div>
 </template>
@@ -18,6 +31,7 @@ export default {
     name: 'StatisticsComponent',
     setup() {
         const statsData = ref(null);
+        const globalStatsData = ref(null);
 
         async function getUserStatistics() {
             try {
@@ -28,9 +42,20 @@ export default {
             }
         }
 
+        async function getGlobalStatistics() {
+            try {
+                const response = await apiService.getGlobalStatistics();
+                globalStatsData.value = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
         return {
             statsData,
-            getUserStatistics
+            globalStatsData,
+            getUserStatistics,
+            getGlobalStatistics
         };
     }
 };

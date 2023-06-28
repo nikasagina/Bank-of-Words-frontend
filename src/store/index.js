@@ -28,7 +28,8 @@ export default createStore({
         },
     },
     getters: {
-        isAuthenticated: (state) => state.isAuthenticated,
+        isAuthenticated: state => state.isAuthenticated,
     },
+
     modules: {},
 });
