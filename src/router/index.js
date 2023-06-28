@@ -6,8 +6,7 @@ import LogoutComponent from "@/components/LogoutComponent.vue";
 import QuestionsComponent from "@/components/QuestionsComponent.vue";
 import WordInfoComponent from "@/components/WordInfoComponent.vue";
 import StatisticsComponent from "@/components/StatisticsComponent.vue";
-import UploadWordComponent from "@/components/UploadWordComponent.vue";
-import UploadBookComponent from "@/components/UploadBookComponent.vue";
+import UploadComponent from "@/components/UploadComponent.vue";
 
 const routes = [
     { path: '/register', component: RegisterComponent },
@@ -16,8 +15,7 @@ const routes = [
     { path: '/questions', component: QuestionsComponent },
     { path: '/word-info', component: WordInfoComponent },
     { path: '/statistics', component: StatisticsComponent },
-    { path: '/upload/word', component: UploadWordComponent },
-    { path: '/upload/book', component: UploadBookComponent },
+    { path: '/upload', component: UploadComponent },
 ];
 
 export const router = createRouter({

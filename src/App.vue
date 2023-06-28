@@ -22,10 +22,7 @@
                     <router-link to="/statistics">Statistics</router-link>
                 </li>
                 <li v-if="isAuthenticated">
-                    <router-link to="/upload/word">Upload Word</router-link>
-                </li>
-                <li v-if="isAuthenticated">
-                    <router-link to="/upload/book">Upload Book</router-link>
+                    <router-link to="/upload">Upload</router-link>
                 </li>
             </ul>
         </nav>
