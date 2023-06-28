@@ -1,32 +1,38 @@
-<!-- src/App.vue -->
 <template>
-    <div id="app">
-        <nav>
-            <ul>
+    <div id="app" class="bg-gray-100">
+        <nav class="bg-white shadow">
+            <ul class="flex justify-between px-4 py-2">
                 <li v-if="!isAuthenticated">
-                    <router-link to="/register">Register</router-link>
+                    <router-link to="/register"
+                                 class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out">Register</router-link>
                 </li>
                 <li v-if="!isAuthenticated">
-                    <router-link to="/login">Login</router-link>
+                    <router-link to="/login"
+                                 class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out">Login</router-link>
                 </li>
                 <li v-if="isAuthenticated">
-                    <router-link to="/logout">Logout</router-link>
+                    <router-link to="/logout"
+                                 class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out">Logout</router-link>
                 </li>
                 <li v-if="isAuthenticated">
-                    <router-link to="/questions">Questions</router-link>
+                    <router-link to="/questions"
+                                 class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out">Questions</router-link>
                 </li>
                 <li v-if="isAuthenticated">
-                    <router-link to="/word-info">Word Info</router-link>
+                    <router-link to="/word-info"
+                                 class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out">Word Info</router-link>
                 </li>
                 <li v-if="isAuthenticated">
-                    <router-link to="/statistics">Statistics</router-link>
+                    <router-link to="/statistics"
+                                 class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out">Statistics</router-link>
                 </li>
                 <li v-if="isAuthenticated">
-                    <router-link to="/upload">Upload</router-link>
+                    <router-link to="/upload"
+                                 class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out">Upload</router-link>
                 </li>
             </ul>
         </nav>
-        <router-view></router-view>
+        <router-view class="p-4"></router-view>
     </div>
 </template>
 

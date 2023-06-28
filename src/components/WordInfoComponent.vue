@@ -1,17 +1,47 @@
 <template>
-    <div>
-        <h2>Word Info</h2>
-        <form @submit.prevent="getWordInfo">
-            <label>Word: <input v-model="word" type="text" /></label>
-            <button type="submit">Get Word Info</button>
+    <div class="py-8 px-4">
+        <h2 class="text-xl font-medium mb-4">Word Info</h2>
+        <form class="flex items-center" @submit.prevent="getWordInfo">
+            <label class="mr-4">
+                <span class="text-gray-700">Word:</span>
+                <input
+                    v-model.trim="word"
+                    type="text"
+                    class="ml-2 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+            </label>
+            <button
+                type="submit"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out"
+            >
+                Get Word Info
+            </button>
         </form>
-        <div v-if="wordData">
-            <h3>{{ wordData.word }}</h3>
-            <p>{{ wordData.definition }}</p>
-            <p>Other definitions: {{ wordData.other_definitions }}</p>
-            <p>Examples: {{ wordData.examples }}</p>
-            <p>Synonyms: {{ wordData.synonyms }}</p>
-            <p>Antonyms: {{ wordData.antonyms }}</p>
+        <div v-if="wordData" class="mt-4">
+            <div class="mb-4">
+                <span class="text-gray-700 font-medium">Definition: </span>
+                <span>{{ wordData.definition }}</span>
+            </div>
+            <div v-if="wordData.other_definitions.length" class="mb-4">
+                <span class="text-gray-700 font-medium">Other definitions: </span>
+                <span>{{ wordData.other_definitions.join('; ') }}</span>
+            </div>
+            <div v-if="wordData.examples.length" class="mb-4">
+                <span class="text-gray-700 font-medium">Examples: </span>
+                <ul class="list-disc ml-4">
+                    <li v-for="(example, index) in wordData.examples" :key="index">
+                        {{ example }}
+                    </li>
+                </ul>
+            </div>
+            <div v-if="wordData.synonyms.length" class="mb-4">
+                <span class="text-gray-700 font-medium">Synonyms: </span>
+                <span>{{ wordData.synonyms.join(', ') }}</span>
+            </div>
+            <div v-if="wordData.antonyms.length" class="mb-4">
+                <span class="text-gray-700 font-medium">Antonyms: </span>
+                <span>{{ wordData.antonyms.join(', ') }}</span>
+            </div>
         </div>
     </div>
 </template>
@@ -38,8 +68,8 @@ export default {
         return {
             word,
             wordData,
-            getWordInfo
+            getWordInfo,
         };
-    }
+    },
 };
 </script>

@@ -1,48 +1,74 @@
 <template>
-    <div>
-        <h2>Upload</h2>
-        <div>
-            <button @click="mode = 'word'">Upload Word</button>
-            <button @click="mode = 'book'">Upload Book</button>
+    <div class="max-w-lg mx-auto p-4">
+        <h2 class="text-3xl mb-4 font-bold">Upload</h2>
+        <div class="flex mb-8">
+            <button
+                @click="mode = 'word'"
+                :class="{'bg-gray-200 text-gray-700': mode === 'word', 'bg-gray-300 text-gray-600': mode !== 'word'}"
+                class="flex-1 py-2 px-4 rounded-l-md font-medium focus:outline-none"
+            >
+                Upload Word
+            </button>
+            <button
+                @click="mode = 'book'"
+                :class="{'bg-gray-200 text-gray-700': mode === 'book', 'bg-gray-300 text-gray-600': mode !== 'book'}"
+                class="flex-1 py-2 px-4 rounded-r-md font-medium focus:outline-none"
+            >
+                Upload Book
+            </button>
         </div>
-        <div v-if="mode === 'word'">
-            <h3>Upload a Word</h3>
+        <div v-if="mode === 'word'" class="mb-8">
+            <h3 class="text-xl mb-4 font-bold">Upload a Word</h3>
             <form @submit.prevent="uploadWord">
-                <div>
-                    <label for="word">Word:</label>
-                    <input id="word" v-model="word" required>
+                <div class="mb-4">
+                    <label for="word" class="block text-gray-700 font-medium mb-2">Word:</label>
+                    <input id="word" v-model="word" required class="w-full px-3 py-2 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="mb-4">
+                    <label for="definition" class="block text-gray-700 font-medium mb-2">Definition:</label>
+                    <textarea id="definition" v-model="definition" required class="w-full px-3 py-2 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                 </div>
                 <div>
-                    <label for="definition">Definition:</label>
-                    <textarea id="definition" v-model="definition" required></textarea>
-                </div>
-                <div>
-                    <button type="submit">Upload</button>
-                </div>
-            </form>
-        </div>
-        <div v-else-if="mode === 'book'">
-            <h3>Upload a Book</h3>
-            <form @submit.prevent="uploadBook">
-                <div>
-                    <label for="file">File:</label>
-                    <input id="file" type="file" ref="file" required>
-                </div>
-                <div>
-                    <button type="submit">Upload</button>
+                    <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-md font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
+                        Upload
+                    </button>
                 </div>
             </form>
-            <div v-if="message">
+            <div v-if="message" class="mt-4 text-green-500 font-medium">
                 {{ message }}
-                <ul>
+            </div>
+        </div>
+        <div v-else-if="mode === 'book'" class="mb-8">
+            <h3 class="text-xl mb-4 font-bold">Upload a Book</h3>
+            <form @submit.prevent="uploadBook">
+                <div class="mb-4">
+                    <label for="file" class="block text-gray-700 font-medium mb-2">File:</label>
+                    <div class="relative rounded-md shadow-sm">
+                        <input id="file" type="file" ref="file" required class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 4a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4zm1 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V8zM3 8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8zm2 0a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8zm0 3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-md font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
+                        Upload
+                    </button>
+                </div>
+            </form>
+            <div v-if="message" class="mt-4 text-green-500 font-medium">
+                {{ message }}
+                <ul class="list-disc pl-4 mt-2">
                     <li v-for="(definition, word) in addedWords" :key="word">{{ word }}: {{ definition }}</li>
                 </ul>
             </div>
         </div>
-        <div v-if="message && mode === 'word'">
+        <div v-if="message && mode === 'word'" class="mt-4 text-green-500 font-medium">
             {{ message }}
         </div>
-        <div v-else-if="error">
+        <div v-else-if="error" class="mt-4 text-red-500 font-medium">
             {{ error }}
         </div>
     </div>
