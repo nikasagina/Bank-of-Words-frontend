@@ -48,10 +48,12 @@
 import apiService from '@/services/apiService';
 import { ref } from 'vue';
 import store from "@/store";
+import {useRouter} from "vue-router";
 
 export default {
     name: 'LoginComponent',
     setup() {
+        const router = useRouter();
         const username = ref('');
         const password = ref('');
         const loggedIn = ref(false); // Variable to track login status
@@ -67,21 +69,19 @@ export default {
                     errorMessage.value = "";
                     loggedIn.value = true;
                     showLogin.value = false; // Hide the login box when the user logs in
+                    await router.push('/profile');
                 }
             } catch (error) {
                 console.error(error);
-                loggedIn.value = true;
+                loggedIn.value = false;
                 errorMessage.value = 'Authentication failed. Please check your username and password.'; // Update error message
             }
         }
 
         function closeLoginBox() {
-            showLogin.value = false; // Hide the login box when the user clicks the "X" button
+            router.push('/'); // Redirect the user to the home page
         }
 
-        function openLoginBox() {
-            showLogin.value = true;
-        }
 
         return {
             username,
@@ -91,7 +91,6 @@ export default {
             showLogin, // Include showLogin in the return object
             login,
             closeLoginBox, // Include closeLoginBox in the return object
-            openLoginBox,
         };
     },
 };

@@ -3,14 +3,14 @@
         <h2 class="text-3xl mb-4 font-bold">Upload</h2>
         <div class="flex mb-8">
             <button
-                @click="mode = 'word'"
+                @click="switchMode('word')"
                 :class="{'bg-gray-200 text-gray-700': mode === 'word', 'bg-gray-300 text-gray-600': mode !== 'word'}"
                 class="flex-1 py-2 px-4 rounded-l-md font-medium focus:outline-none"
             >
                 Upload Word
             </button>
             <button
-                @click="mode = 'book'"
+                @click="switchMode('book')"
                 :class="{'bg-gray-200 text-gray-700': mode === 'book', 'bg-gray-300 text-gray-600': mode !== 'book'}"
                 class="flex-1 py-2 px-4 rounded-r-md font-medium focus:outline-none"
             >
@@ -60,10 +60,12 @@
             </form>
             <div v-if="message" class="mt-4 text-green-500 font-medium">
                 {{ message }}
-                <ul class="list-disc pl-4 mt-2">
-                    <li v-for="(definition, word) in addedWords" :key="word">{{ word }}: {{ definition }}</li>
-                </ul>
             </div>
+            <ul class="list-disc pl-4 mt-2">
+                <li v-for="(definition, word) in addedWords" :key="word">
+                    <span class="text-black">{{ word }}:</span> <span class="text-gray-500">{{ definition }}</span>
+                </li>
+            </ul>
         </div>
         <div v-if="message && mode === 'word'" class="mt-4 text-green-500 font-medium">
             {{ message }}
@@ -89,6 +91,12 @@ export default {
         }
     },
     methods: {
+        switchMode(newMode) {
+            this.mode = newMode;
+            this.message = '';
+            this.error = '';
+        },
+
         async uploadWord() {
             try {
                 const response = await apiService.uploadWord(this.word, this.definition);
@@ -105,13 +113,21 @@ export default {
                 const file = this.$refs.file.files[0];
                 const response = await apiService.uploadBook(file);
                 if (response.data.successful) {
-                    this.message = response.data.message;
-                    this.addedWords = response.data.addedWords;
+                    this.addedWords = response.data.added_words
+
+                    if (Object.keys(this.addedWords).length === 0) {
+                        this.message = 'No new words added.';
+                    } else {
+                        this.message = response.data.message;
+                        this.addedWords = response.data.added_words;
+                    }
                 }
             } catch (error) {
                 console.error(error);
                 this.error = 'Failed to upload book.';
             }
+
+
         }
     }
 }

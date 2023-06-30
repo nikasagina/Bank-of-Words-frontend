@@ -45,4 +45,7 @@ export default {
     getWordInfo: (word) => httpClient.get(`/word/info?word=${word}`),
     getLearningWords: () => httpClient.get('/word/learning'),
     getLearnedWords: () => httpClient.get('/word/learned'),
+
+    // UserController
+    getUserInfo: () => httpClient.get('/user/info')
 };

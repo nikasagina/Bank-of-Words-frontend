@@ -17,7 +17,7 @@ export default {
 
         onMounted(() => {
             store.dispatch('logout');
-            router.push('/login');
+            router.push('/');
         });
 
         return {};

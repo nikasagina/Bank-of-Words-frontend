@@ -30,6 +30,10 @@
                     <router-link to="/upload"
                                  class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out">Upload</router-link>
                 </li>
+                <li v-if="isAuthenticated">
+                    <router-link to="/profile"
+                                 class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out">Profile</router-link>
+                </li>
             </ul>
         </nav>
         <router-view class="p-4"></router-view>
@@ -46,5 +50,6 @@ export default defineComponent({
             return this.$store.getters.isAuthenticated;
         }
     }
+
 });
 </script>

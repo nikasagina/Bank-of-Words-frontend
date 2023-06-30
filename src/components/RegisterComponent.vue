@@ -57,10 +57,12 @@
 <script>
 import apiService from '@/services/apiService';
 import { ref } from 'vue';
+import {useRouter} from "vue-router";
 
 export default {
     name: 'RegisterComponent',
     setup() {
+        const router = useRouter();
         const username = ref('');
         const password = ref('');
         const email = ref('');
@@ -99,7 +101,7 @@ export default {
         }
 
         function closeRegisterBox() {
-            showRegister.value = false; // Set showRegister to false to hide the register box
+            router.push('/'); // Redirect the user to the home page
         }
 
         return {
