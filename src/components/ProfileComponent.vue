@@ -1,8 +1,16 @@
 <template>
-    <div>
-        <h1>Welcome {{ user.username }}!</h1>
-        <p>Email: {{ user.email }}</p>
+    <div class="flex flex-col items-center">
+        <div class="bg-gray-200 h-32 w-32 rounded-full flex items-center justify-center mb-4">
+            <span class="text-4xl font-bold text-gray-500">{{ user.username.charAt(0).toUpperCase() }}</span>
+        </div>
+        <h1 class="text-3xl font-bold">Welcome {{ user.username }}!</h1>
+        <p>Email address: {{ user.email }}</p>
         <p>Account created on {{ user.joinDate }}</p>
+        <button
+            class="bg-indigo-600 text-white px-4 py-2 rounded mt-4"
+            onclick="window.location.href = '/logout'">
+            Logout
+        </button>
     </div>
 </template>
 
