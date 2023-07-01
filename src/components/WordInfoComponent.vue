@@ -1,5 +1,5 @@
 <template>
-    <div class="py-8 px-4">
+    <div class="max-w-lg mx-auto p-4">
         <h2 class="text-xl font-medium mb-4">Word Info</h2>
         <form class="flex items-center" @submit.prevent="getWordInfo">
             <label class="mr-4">
@@ -24,7 +24,7 @@
             </div>
             <div v-if="wordData.other_definitions.length" class="mb-4">
                 <span class="text-gray-700 font-medium">Other definitions: </span>
-                <span>{{ wordData.other_definitions.join('; ') }}</span>
+                <span v-html="formatDefinitions(wordData.other_definitions)"></span>
             </div>
             <div v-if="wordData.examples.length" class="mb-4">
                 <span class="text-gray-700 font-medium">Examples: </span>
@@ -70,6 +70,14 @@ export default {
             wordData,
             getWordInfo,
         };
+    },
+    methods: {
+        formatDefinitions(definitions) {
+            const formattedDefinitions = definitions.map((definition, index) => {
+                return `${index + 1}. ${definition}`;
+            });
+            return formattedDefinitions.join('<br>').replace(/^\d+.\s/, '<br>$&');
+        },
     },
 };
 </script>
