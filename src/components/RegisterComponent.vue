@@ -10,40 +10,23 @@
             <form @submit.prevent="register" class="flex flex-col space-y-4">
                 <label>
                     <span class="text-gray-700">Username:</span>
-                    <input
-                        v-model.trim="username"
-                        type="text"
-                        class="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
-                    />
+                    <input v-model.trim="username" type="text" class="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50" />
                 </label>
                 <label>
                     <span class="text-gray-700">Password:</span>
-                    <input
-                        v-model.trim="password"
-                        type="password"
-                        class="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
-                    />
+                    <input v-model.trim="password" type="password" class="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50" />
                 </label>
                 <label>
                     <span class="text-gray-700">Email:</span>
-                    <input
-                        v-model.trim="email"
-                        type="email"
-                        class="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
-                    />
+                    <input v-model.trim="email" type="email" class="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50" />
                 </label>
-                <button
-                    type="submit"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out"
-                >
-                    Register
-                </button>
-                <div class="mt-4 text-gray-700 text-sm">
-                    Already have an account? <a href="/login" class="underline">Login here</a>.
-                </div>
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out" > Register </button>
             </form>
+            <div v-if="!success" class="mt-4 text-gray-700 text-sm">
+                Already have an account? <a href="/login" class="underline">Login here</a>.
+            </div>
             <div v-if="success" class="mt-4 text-green-500 font-medium">
-                Registered successfully!
+                Registered successfully! Please <a href="/login" class="underline">login here</a>.
             </div>
             <div v-if="errorMessage.length > 0" class="mt-4 text-red-500 font-medium">
                 <ul class="list-disc list-inside">
@@ -57,7 +40,7 @@
 <script>
 import apiService from '@/services/apiService';
 import { ref } from 'vue';
-import {useRouter} from "vue-router";
+import { useRouter} from "vue-router";
 
 export default {
     name: 'RegisterComponent',
@@ -68,17 +51,16 @@ export default {
         const email = ref('');
         const success = ref(false);
         const errorMessage = ref([]);
-        const showRegister = ref(true); // Variable to show or hide the register box
+        const showRegister = ref(true);
 
+        // Variable to show or hide the register box
         async function register() {
             try {
                 const response = await apiService.register(username.value, password.value, email.value);
                 const { successful, usernameErrorClass, passwordErrorClass, emailErrorClass } = response.data;
                 errorMessage.value = []; // Clear any previous error messages
-
                 if (successful) {
                     success.value = true;
-                    showRegister.value = false; // Hide the register box when registration is successful
                 } else {
                     if (usernameErrorClass) {
                         errorMessage.value.push(usernameErrorClass);
@@ -89,14 +71,13 @@ export default {
                     if (emailErrorClass) {
                         errorMessage.value.push(emailErrorClass);
                     }
-
-                    if (errorMessage.value.length === 0) {
+                    if (errorMessage.value.length=== 0) {
                         errorMessage.value.push('Registration failed. Please try again.');
                     }
                 }
             } catch (error) {
                 console.error(error);
-                errorMessage.value = ['An error occurred during registration.Please try again later.'];
+                errorMessage.value = ['An error occurred during registration. Please try again later.'];
             }
         }
 
