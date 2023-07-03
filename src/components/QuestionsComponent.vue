@@ -10,10 +10,18 @@
                         class="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out">
                     Get Spelling Question
                 </button>
+                <button @click="getImageQuestion"
+                        class="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out">
+                    Get Image Question
+                </button>
             </div>
             <div v-if="questionData" class="rounded-lg border p-4">
                 <h3 class="text-lg font-medium mb-2">{{ questionData.question }}</h3>
                 <div class="flex flex-col">
+                    <div v-if="image" class="mb-4">
+                        <img :src="image" alt="Question Image" class="rounded-lg" style="max-width: 100%; max-height: 400px;">
+                        <input v-model="answer" type="text" class="mt-4 w-full max-w-md px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Type your answer here" style="display: inline-block;">
+                    </div>
                     <label v-for="(choice, index) in questionData.choices" :key="index" class="flex items-center text-gray-700">
                         <input v-model="answer" type="radio" :value="choice" class="form-radio h-4 w-4 text-indigo-600 transition-colors duration-200 ease-in-out"
                                :disabled="answerSubmitted">
@@ -53,7 +61,7 @@
 
 <script>
 import apiService from '@/services/apiService';
-import { ref } from 'vue';
+import {ref} from 'vue';
 
 export default {
     name: 'QuestionsComponent',
@@ -65,6 +73,8 @@ export default {
         const correctAnswer = ref('');
         const showNextQuestion = ref(false); // Added to track when to show the "Next Question" button
         let lastQuestionType = null; // Added to track the type of the last question
+        let textAnswer = ''
+        const image = ref(null);
 
         async function getQuestion() {
             try {
@@ -74,6 +84,7 @@ export default {
                 answerSubmitted.value = false;
                 answerIsCorrect.value = false;
                 showNextQuestion.value = false; // Reset the "Next Question" button
+                image.value = null
                 lastQuestionType = 'normal'; // Set the type of the last question
             } catch (error) {
                 console.error(error);
@@ -88,7 +99,37 @@ export default {
                 answerSubmitted.value = false;
                 answerIsCorrect.value = false;
                 showNextQuestion.value = false; // Reset the "Next Question" button
+                image.value = null
                 lastQuestionType = 'spelling'; // Set the type of the last question
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function getImageQuestion() {
+            try {
+                const response = await apiService.getImageQuestion();
+                questionData.value = response.data;
+
+                const imageResponse = await fetch(`http://localhost:8000/api/get/image?id=${response.data.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+
+                // const imageResponse = await apiService.getImage(response.data.id)
+
+                const blob = await imageResponse.blob();
+                image.value = URL.createObjectURL(blob);
+
+                console.log(image.value)
+
+                answer.value = '';
+                answerSubmitted.value = false;
+                answerIsCorrect.value = false;
+                showNextQuestion.value = false; // Reset the "Next Question" button
+                lastQuestionType = 'image'; // Set the type of the last question
             } catch (error) {
                 console.error(error);
             }
@@ -96,6 +137,7 @@ export default {
 
         async function submitAnswer() {
             try {
+
                 const response = await apiService.submitAnswer(answer.value, questionData.value.id);
                 answerSubmitted.value = true;
                 const isCorrect = response.data.correct;
@@ -123,6 +165,8 @@ export default {
                 await getQuestion();
             } else if (lastQuestionType === 'spelling') {
                 await getSpellingQuestion();
+            } else if (lastQuestionType === 'image') {
+                await getImageQuestion();
             }
         }
 
@@ -137,7 +181,10 @@ export default {
             getSpellingQuestion,
             submitAnswer,
             markWordAsLearned,
-            getNextQuestion
+            getNextQuestion,
+            getImageQuestion,
+            image,
+            textAnswer,
         };
     }
 };

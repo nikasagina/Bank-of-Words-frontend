@@ -21,6 +21,7 @@ export default {
     // QuestionController
     getQuestion: () => httpClient.get('/question'),
     getSpellingQuestion: () => httpClient.get('/question/spelling'),
+    getImageQuestion: () => httpClient.get(`/question/image`),
     submitAnswer: (guess, id) => httpClient.post('/answer', null, { params: { guess, id } }),
 
     // StatisticsController
@@ -47,5 +48,8 @@ export default {
     getLearnedWords: () => httpClient.get('/word/learned'),
 
     // UserController
-    getUserInfo: () => httpClient.get('/user/info')
+    getUserInfo: () => httpClient.get('/user/info'),
+
+    // ImageController
+    getImage: (id) => httpClient.get(`/get/image?id=${id}`),
 };
