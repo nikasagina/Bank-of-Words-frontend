@@ -15,6 +15,7 @@
                     Get Image Question
                 </button>
             </div>
+            <div v-if="error" class="text-red-500">{{ error }}</div>
             <div v-if="questionData" class="rounded-lg border p-4">
                 <h3 class="text-lg font-medium mb-2">{{ questionData.question }}</h3>
                 <div class="flex flex-col">
@@ -75,9 +76,11 @@ export default {
         let lastQuestionType = null; // Added to track the type of the last question
         let textAnswer = ''
         const image = ref(null);
+        const error = ref(null);
 
         async function getQuestion() {
             try {
+                error.value = null
                 const response= await apiService.getQuestion();
                 questionData.value = response.data;
                 answer.value = '';
@@ -93,6 +96,7 @@ export default {
 
         async function getSpellingQuestion() {
             try {
+                error.value = null
                 const response = await apiService.getSpellingQuestion();
                 questionData.value = response.data;
                 answer.value = '';
@@ -108,22 +112,26 @@ export default {
 
         async function getImageQuestion() {
             try {
+                error.value = null
                 const response = await apiService.getImageQuestion();
                 questionData.value = response.data;
 
-                const imageResponse = await fetch(`http://localhost:8000/api/get/image?id=${response.data.id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
+                if ('error' in response.data) {
+                    console.error(response.data.error);
+                    error.value = response.data.error
+                } else {
 
+                    const imageResponse = await fetch(`http://localhost:8000/api/get/image?filename=${response.data.filename}`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
 
-                // const imageResponse = await apiService.getImage(response.data.id)
+                    // const imageResponse = await apiService.getImage(response.data.id)
 
-                const blob = await imageResponse.blob();
-                image.value = URL.createObjectURL(blob);
-
-                console.log(image.value)
+                    const blob = await imageResponse.blob();
+                    image.value = URL.createObjectURL(blob);
+                }
 
                 answer.value = '';
                 answerSubmitted.value = false;
@@ -185,6 +193,7 @@ export default {
             getImageQuestion,
             image,
             textAnswer,
+            error,
         };
     }
 };
