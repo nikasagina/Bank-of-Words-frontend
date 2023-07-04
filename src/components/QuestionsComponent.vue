@@ -119,6 +119,7 @@ export default {
                 if ('error' in response.data) {
                     console.error(response.data.error);
                     error.value = response.data.error
+                    image.value = null
                 } else {
 
                     const imageResponse = await fetch(`http://localhost:8000/api/get/image?filename=${response.data.filename}`, {
