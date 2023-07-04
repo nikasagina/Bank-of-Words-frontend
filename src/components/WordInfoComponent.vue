@@ -42,19 +42,22 @@
                 <span class="text-gray-700 font-medium">Antonyms: </span>
                 <span>{{ wordData.antonyms.join(', ') }}</span>
             </div>
+            <span class="text-gray-700 font-medium">Generated Image: </span>
+            <img :src="imageUrl" alt="Generated image of the searched word" class="mt-2 border border-gray-300 rounded-md shadow-sm">
         </div>
     </div>
 </template>
 
 <script>
 import apiService from '@/services/apiService';
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
 
 export default {
     name: 'WordInfo',
     setup() {
         const word = ref('');
         const wordData = ref(null);
+        const imageUrl = computed(() => `https://image.pollinations.ai/prompt/${encodeURIComponent(word.value)}`);
 
         async function getWordInfo() {
             try {
@@ -65,19 +68,20 @@ export default {
             }
         }
 
-        return {
-            word,
-            wordData,
-            getWordInfo,
-        };
-    },
-    methods: {
-        formatDefinitions(definitions) {
+        function formatDefinitions(definitions) {
             const formattedDefinitions = definitions.map((definition, index) => {
                 return `${index + 1}. ${definition}`;
             });
             return formattedDefinitions.join('<br>').replace(/^\d+.\s/, '<br>$&');
-        },
+        }
+
+        return {
+            word,
+            wordData,
+            getWordInfo,
+            imageUrl,
+            formatDefinitions,
+        };
     },
 };
 </script>
