@@ -12,6 +12,20 @@
             Logout
         </button>
     </div>
+    <div class="flex justify-around" v-if="learningWords.length > 0 || learnedWords.length > 0">
+        <div>
+            <h2 class="text-2xl font-bold mt-8">Learning Words</h2>
+            <ul>
+                <li v-for="word in learningWords" :key="word.id">{{ word.word }}</li>
+            </ul>
+        </div>
+        <div>
+            <h2 class="text-2xl font-bold mt-8">Learned Words</h2>
+            <ul>
+                <li v-for="word in learnedWords" :key="word.id">{{ word.word }}</li>
+            </ul>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -27,6 +41,9 @@ export default {
             joinDate: ''
         });
 
+        const learningWords = reactive([]);
+        const learnedWords = reactive([]);
+
         const getUserInfo = async () => {
             try {
                 const response = await apiService.getUserInfo();
@@ -39,12 +56,36 @@ export default {
             }
         };
 
+        const getLearningWords = async () => {
+            try {
+                const response = await apiService.getLearningWords();
+                learningWords.push(...response.data.learning_words);
+            } catch (error) {
+                console.error(error);
+                // Handle error
+            }
+        };
+
+        const getLearnedWords = async () => {
+            try {
+                const response = await apiService.getLearnedWords();
+                learnedWords.push(...response.data.learned_words);
+            } catch (error) {
+                console.error(error);
+                // Handle error
+            }
+        };
+
         onMounted(() => {
             getUserInfo();
+            getLearningWords();
+            getLearnedWords();
         });
 
         return {
-            user
+            user,
+            learningWords,
+            learnedWords
         };
     }
 };
