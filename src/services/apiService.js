@@ -29,7 +29,30 @@ export default {
     getGlobalStatistics: () => httpClient.get('/stats/global'),
 
     // UploadController
-    uploadWord: (word, definition) => httpClient.post('/upload/word', null, { params: { word, definition } }),
+    uploadWord: (word, definition, image) => {
+        const formData = new FormData();
+        formData.append('word', word);
+        formData.append('definition', definition);
+        if (image) {
+            formData.append('image', image);
+        }
+        return httpClient.post('/upload/word', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+    },
+    uploadWordImage: (word, image) => {
+        const formData = new FormData();
+        formData.append('word', word);
+        formData.append('image', image);
+        return httpClient.post('/upload/word/image', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+        });
+    },
     uploadBook: (file) => {
         const formData = new FormData();
         formData.append('file', file);

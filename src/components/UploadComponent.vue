@@ -28,8 +28,17 @@
                     <label for="definition" class="block text-gray-700 font-medium mb-2">Definition:</label>
                     <textarea id="definition" v-model="definition" required class="w-full px-3 py-2 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                 </div>
+                <label for="image" class="block text-gray-700 font-medium mb-2">Image (optional):</label>
+                <div class="relative rounded-md shadow-sm">
+                    <input id="image" type="file" @change="onImageSelect" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </div>
+                </div>
                 <div>
-                    <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-md font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
+                    <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-md mt-4 font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
                         Upload
                     </button>
                 </div>
@@ -85,6 +94,7 @@ export default {
             mode: null,
             word: '',
             definition: '',
+            image: null,
             message: '',
             error: '',
             addedWords: {},
@@ -97,9 +107,13 @@ export default {
             this.error = '';
         },
 
+        onImageSelect(e) {
+            this.image = e.target.files[0];
+        },
+
         async uploadWord() {
             try {
-                const response = await apiService.uploadWord(this.word, this.definition);
+                const response = await apiService.uploadWord(this.word, this.definition, this.image);
                 if (response.data.successful) {
                     this.message = 'Word uploaded successfully.';
                 }
