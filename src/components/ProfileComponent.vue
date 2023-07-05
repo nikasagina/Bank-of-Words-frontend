@@ -11,14 +11,21 @@
         <div>
             <h2 class="text-2xl font-bold mt-8">Learning Words</h2>
             <ul>
-                <li v-for="word in learningWords" :key="word.id">{{ word.word }}</li>
+                <li v-for="word in learningWords" :key="word.id" @click="showDefinition(word)">{{ word.word }}</li>
             </ul>
         </div>
         <div>
             <h2 class="text-2xl font-bold mt-8">Learned Words</h2>
             <ul>
-                <li v-for="word in learnedWords" :key="word.id">{{ word.word }}</li>
+                <li v-for="word in learnedWords" :key="word.id" @click="showDefinition(word)">{{ word.word }}</li>
             </ul>
+        </div>
+    </div>
+    <div class="fixed top-0 left-0 w-full h-full flex items-center justify-center" v-if="showingDefinition.value" @click.self="hideDefinition">
+        <div class="bg-white p-8 rounded-xl shadow-xl relative">
+            <button class="absolute top-0 right-0 m-2 p-2" @click="hideDefinition">x</button>
+            <h3 class="text-2xl font-bold">{{ selectedWord.word }}</h3>
+            <p>{{ selectedWord.definition }}</p>
         </div>
     </div>
 </template>
@@ -38,6 +45,8 @@ export default {
 
         const learningWords = reactive([]);
         const learnedWords = reactive([]);
+        const showingDefinition = reactive({ value: false });
+        const selectedWord = reactive({ word: '', definition: '' });
 
         const getUserInfo = async () => {
             try {
@@ -71,6 +80,17 @@ export default {
             }
         };
 
+        const showDefinition = (word) => {
+            selectedWord.word = word.word;
+            selectedWord.definition = word.definition;
+            showingDefinition.value = true;
+        };
+
+        const hideDefinition = () => {
+            showingDefinition.value = false;
+        };
+
+
         onMounted(() => {
             getUserInfo();
             getLearningWords();
@@ -80,7 +100,11 @@ export default {
         return {
             user,
             learningWords,
-            learnedWords
+            learnedWords,
+            showDefinition,
+            hideDefinition,
+            showingDefinition,
+            selectedWord
         };
     }
 };
