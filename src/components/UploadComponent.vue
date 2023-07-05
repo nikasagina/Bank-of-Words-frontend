@@ -1,7 +1,7 @@
 <template>
     <div class="max-w-lg mx-auto p-4">
         <h2 class="text-3xl mb-4 font-bold">Upload</h2>
-        <div class="flex mb-8">
+        <div class="flex-1 mb-8">
             <button
                 @click="switchMode('word')"
                 :class="{'bg-gray-200 text-gray-700': mode === 'word', 'bg-gray-300 text-gray-600': mode !== 'word'}"
@@ -43,9 +43,6 @@
                     </button>
                 </div>
             </form>
-            <div v-if="message" class="mt-4 text-green-500 font-medium">
-                {{ message }}
-            </div>
         </div>
         <div v-else-if="mode === 'book'" class="mb-8">
             <h3 class="text-xl mb-4 font-bold">Upload a Book</h3>
@@ -116,6 +113,8 @@ export default {
                 const response = await apiService.uploadWord(this.word, this.definition, this.image);
                 if (response.data.successful) {
                     this.message = 'Word uploaded successfully.';
+                } else {
+                    this.error = 'You already have the word added.';
                 }
             } catch (error) {
                 console.error(error);
@@ -130,7 +129,7 @@ export default {
                     this.addedWords = response.data.added_words
 
                     if (Object.keys(this.addedWords).length === 0) {
-                        this.message = 'No new words added.';
+                        this.error = 'No new words added.';
                     } else {
                         this.message = response.data.message;
                         this.addedWords = response.data.added_words;

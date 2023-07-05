@@ -6,11 +6,6 @@
         <h1 class="text-3xl font-bold">Welcome {{ user.username }}!</h1>
         <p>Email address: {{ user.email }}</p>
         <p>Account created on {{ user.joinDate }}</p>
-        <button
-            class="bg-indigo-600 text-white px-4 py-2 rounded mt-4"
-            onclick="window.location.href = '/logout'">
-            Logout
-        </button>
     </div>
     <div class="flex justify-around" v-if="learningWords.length > 0 || learnedWords.length > 0">
         <div>

@@ -12,8 +12,6 @@
             <li>Work on spelling improvement.</li>
         </ul>
         <p class="text-lg mb-4">If you're already a registered user, please log in to continue. Otherwise, please sign up to create an account.</p>
-        <router-link to="/register" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">Sign Up</router-link>
-        <router-link to="/login" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Log In</router-link>
     </div>
 </template>
 
