@@ -44,9 +44,8 @@ export default {
     },
     uploadWordImage: (word, image) => {
         const formData = new FormData();
-        formData.append('word', word);
         formData.append('image', image);
-        return httpClient.post('/upload/word/image', formData, {
+        return httpClient.post(`/upload/${word}/image`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -65,14 +64,12 @@ export default {
 
     // WordController
     markWordAsLearned: (word) => httpClient.post('/word/learn', null, { params: { word }}),
-    getDefinitions: (word) => httpClient.get(`/word/definitions?word=${word}`),
-    getWordInfo: (word) => httpClient.get(`/word/info?word=${word}`),
-    getLearningWords: () => httpClient.get('/word/learning'),
-    getLearnedWords: () => httpClient.get('/word/learned'),
+    getDefinitions: (word) => httpClient.get(`/word/${word}/definitions`),
+    getWordInfo: (word) => httpClient.get(`/word/${word}/info`),
 
     // UserController
     getUserInfo: () => httpClient.get('/user/info'),
+    getLearningWords: () => httpClient.get('/user/learning'),
+    getLearnedWords: () => httpClient.get('/user/learned'),
 
-    // ImageController
-    getImage: (id) => httpClient.get(`/get/image?id=${id}`),
 };

@@ -120,7 +120,7 @@ export default {
                     image.value = null
                 } else {
 
-                    const imageResponse = await fetch(`http://localhost:8000/api/get/image?filename=${response.data.filename}`, {
+                    const imageResponse = await fetch(`http://localhost:8000/api/image/${response.data.filename}`, {
                         headers: {
                             'Authorization': `Bearer ${localStorage.getItem('token')}`
                         }
