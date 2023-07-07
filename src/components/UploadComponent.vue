@@ -1,22 +1,29 @@
 <template>
-    <div class="max-w-lg mx-auto p-4">
+    <div class="max-w-xg mx-auto p-4">
         <h2 class="text-3xl mb-4 font-bold">Upload</h2>
-        <div class="flex-1 mb-8">
-            <select v-model="selectedTable" class="border border-gray-300 p-2 rounded-md mr-5">
+        <div class="flex-1">
+            <select v-model="selectedTable" class="border border-gray-300 p-2 rounded-md mr-5" style="width: 130px" @click="fetchTables()">
                 <option disabled value="">Select a table</option>
                 <option v-for="(table, index) in tables" :key="index" :value="table.tableId">{{ table.name }}</option>
             </select>
             <button
+                @click="switchMode('table')"
+                :class="{'bg-gray-200 text-gray-700': mode === 'table', 'bg-gray-300 text-gray-600': mode !== 'table'}"
+                class="flex-1 py-2 px-6 rounded-l-md font-medium focus:outline-none"
+            >
+                Create Table
+            </button>
+            <button
                 @click="switchMode('word')"
                 :class="{'bg-gray-200 text-gray-700': mode === 'word', 'bg-gray-300 text-gray-600': mode !== 'word'}"
-                class="flex-1 py-2 px-4 rounded-l-md font-medium focus:outline-none"
+                class="flex-1 py-2 px-6 rounded-x-md font-medium focus:outline-none"
             >
                 Upload Word
             </button>
             <button
                 @click="switchMode('book')"
                 :class="{'bg-gray-200 text-gray-700': mode === 'book', 'bg-gray-300 text-gray-600': mode !== 'book'}"
-                class="flex-1 py-2 px-4 rounded-r-md font-medium focus:outline-none"
+                class="flex-1 py-2 px-6 rounded-r-md font-medium focus:outline-none"
             >
                 Upload Book
             </button>
@@ -77,6 +84,20 @@
                 </li>
             </ul>
         </div>
+        <div v-if="mode === 'table'" class="mb-8">
+            <h3 class="text-xl mb-4 font-bold">Create a Table</h3>
+            <form @submit.prevent="createTable">
+                <div class="mb-4">
+                    <label for="tableName" class="block text-gray-700 font-medium mb-2">Table Name:</label>
+                    <input id="tableName" v-model="tableName" required class="w-full px-3 py-2 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-md mt-4 font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
+                        Create
+                    </button>
+                </div>
+            </form>
+        </div>
         <div v-if="message && mode === 'word'" class="mt-4 text-green-500 font-medium">
             {{ message }}
         </div>
@@ -122,6 +143,7 @@ export default {
 
         return {
             tables,
+            fetchTables,
         }
     },
     methods: {
@@ -183,8 +205,24 @@ export default {
             }
         },
 
+        async createTable() {
+            try {
+                const response = await apiService.createTable(this.tableName);
+                if (response.data.successful) {
+                    this.message = 'Table created successfully.';
+                    this.error = '';
+                    this.tables.push(response.data.table);
+                    this.selectedTable = response.data.table.tableId;
+                    await this.updateDropdown();
+                } else {
+                    this.error = response.data.message;
+                }
+            } catch (error) {
+                console.error(error);
+                this.error = 'Failed to create table.';
+            }
+        },
+
     },
-
-
 }
 </script>
