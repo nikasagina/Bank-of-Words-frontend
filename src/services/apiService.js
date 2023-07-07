@@ -19,9 +19,9 @@ export default {
     authenticate: (username, password) => httpClient.post('/authenticate', null, { params: { username, password } }),
 
     // QuestionController
-    getQuestion: () => httpClient.get('/question'),
-    getSpellingQuestion: () => httpClient.get('/question/spelling'),
-    getImageQuestion: () => httpClient.get(`/question/image`),
+    getQuestion: (tableId) => httpClient.get(`/question/default/${tableId || ''}`),
+    getSpellingQuestion: (tableId) => httpClient.get(`/question/spelling/${tableId || ''}`),
+    getImageQuestion: (tableId) => httpClient.get(`/question/image/${tableId || ''}`),
     submitAnswer: (guess, id) => httpClient.post('/answer', null, { params: { guess, id } }),
 
     // StatisticsController
@@ -29,8 +29,9 @@ export default {
     getGlobalStatistics: () => httpClient.get('/stats/global'),
 
     // UploadController
-    uploadWord: (word, definition, image) => {
+    uploadWord: (tableId, word, definition, image) => {
         const formData = new FormData();
+        formData.append('tableId', tableId);
         formData.append('word', word);
         formData.append('definition', definition);
         if (image) {
@@ -42,8 +43,9 @@ export default {
             },
         });
     },
-    uploadWordImage: (word, image) => {
+    uploadWordImage: (tableId, word, image) => {
         const formData = new FormData();
+        formData.append('tableId', tableId);
         formData.append('image', image);
         return httpClient.post(`/upload/${word}/image`, formData, {
             headers: {
@@ -52,8 +54,9 @@ export default {
             },
         });
     },
-    uploadBook: (file) => {
+    uploadBook: (tableId, file) => {
         const formData = new FormData();
+        formData.append('tableId', tableId);
         formData.append('file', file);
         return httpClient.post('/upload/book', formData, {
             headers: {
@@ -72,4 +75,9 @@ export default {
     getLearningWords: () => httpClient.get('/user/learning'),
     getLearnedWords: () => httpClient.get('/user/learned'),
 
+
+    // TableController
+    createTable: (tableName) => httpClient.post('/table/create', null, { params: { tableName }} ),
+    getInitialTables: () => httpClient.get('/table/initial'),
+    getUserTables: () => httpClient.get('/table/user'),
 };

@@ -36,7 +36,7 @@
         <footer class="bg-white shadow mt-auto">
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                 <div class="text-center text-gray-500">
-                    &copy; 2023 Bank of Words. All rights reserved.
+                    &copy; 2023 Bank of Words
                 </div>
             </div>
         </footer>
