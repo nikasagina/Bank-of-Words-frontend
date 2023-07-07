@@ -2,6 +2,10 @@
     <div class="max-w-lg mx-auto p-4">
         <h2 class="text-3xl mb-4 font-bold">Upload</h2>
         <div class="flex-1 mb-8">
+            <select v-model="selectedTable" class="border border-gray-300 p-2 rounded-md mr-5">
+                <option disabled value="">Select a table</option>
+                <option v-for="(table, index) in tables" :key="index" :value="table.tableId">{{ table.name }}</option>
+            </select>
             <button
                 @click="switchMode('word')"
                 :class="{'bg-gray-200 text-gray-700': mode === 'word', 'bg-gray-300 text-gray-600': mode !== 'word'}"
@@ -19,7 +23,7 @@
         </div>
         <div v-if="mode === 'word'" class="mb-8">
             <h3 class="text-xl mb-4 font-bold">Upload a Word</h3>
-            <form @submit.prevent="uploadWord">
+            <form @submit.prevent="uploadWord(selectedTable)">
                 <div class="mb-4">
                     <label for="word" class="block text-gray-700 font-medium mb-2">Word:</label>
                     <input id="word" v-model="word" required class="w-full px-3 py-2 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
@@ -46,7 +50,7 @@
         </div>
         <div v-else-if="mode === 'book'" class="mb-8">
             <h3 class="text-xl mb-4 font-bold">Upload a Book</h3>
-            <form @submit.prevent="uploadBook">
+            <form @submit.prevent="uploadBook(selectedTable)">
                 <div class="mb-4">
                     <label for="file" class="block text-gray-700 font-medium mb-2">File:</label>
                     <div class="relative rounded-md shadow-sm">
@@ -84,6 +88,7 @@
 
 <script>
 import apiService from "@/services/apiService";
+import {onMounted, ref} from "vue";
 export default {
     name: 'UploadComponent',
     data() {
@@ -95,9 +100,32 @@ export default {
             message: '',
             error: '',
             addedWords: {},
+            selectedTable: '',
+        }
+    },
+
+    setup() {
+        const tables = ref([]);
+
+        async function fetchTables() {
+            try {
+                const userTables = await apiService.getUserTables();
+                tables.value = [...userTables.data.tables];
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        onMounted(async () => {
+            await fetchTables();
+        });
+
+        return {
+            tables,
         }
     },
     methods: {
+
         switchMode(newMode) {
             this.mode = newMode;
             this.message = '';
@@ -108,11 +136,17 @@ export default {
             this.image = e.target.files[0];
         },
 
-        async uploadWord() {
+        async uploadWord(tableId) {
+            if (tableId === undefined) {
+                this.error = 'Please select a table to add the word to';
+                return;
+            }
+
             try {
-                const response = await apiService.uploadWord(this.word, this.definition, this.image);
+                const response = await apiService.uploadWord(tableId, this.word, this.definition, this.image);
                 if (response.data.successful) {
                     this.message = 'Word uploaded successfully.';
+                    this.error = '';
                 } else {
                     this.error = 'You already have the word added.';
                 }
@@ -121,16 +155,24 @@ export default {
                 this.error = 'Failed to upload word.';
             }
         },
-        async uploadBook() {
+
+        async uploadBook(tableId) {
+            if (tableId === undefined) {
+                this.error = 'Please select a table to add the words to';
+                return;
+            }
+
             try {
                 const file = this.$refs.file.files[0];
-                const response = await apiService.uploadBook(file);
+                const response = await apiService.uploadBook(tableId, file);
+
                 if (response.data.successful) {
                     this.addedWords = response.data.added_words
 
                     if (Object.keys(this.addedWords).length === 0) {
                         this.error = 'No new words added.';
                     } else {
+                        this.error = '';
                         this.message = response.data.message;
                         this.addedWords = response.data.added_words;
                     }
@@ -139,9 +181,10 @@ export default {
                 console.error(error);
                 this.error = 'Failed to upload book.';
             }
+        },
+
+    },
 
 
-        }
-    }
 }
 </script>
