@@ -6,16 +6,20 @@
         <h1 class="text-3xl font-bold">Welcome {{ user.username }}!</h1>
         <p>Email address: {{ user.email }}</p>
         <p>Account created on {{ user.joinDate }}</p>
+        <a href="/statistics"  class="bg-indigo-600 text-white py-2 px-4 rounded-md mt-4 font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
+            Show Statistics
+        </a>
     </div>
+
     <div class="flex justify-around" v-if="learningWords.length > 0 || learnedWords.length > 0">
         <div>
-            <h2 class="text-2xl font-bold mt-8">Learning Words</h2>
+            <h2 class="text-2xl font-bold">Learning Words</h2>
             <ul>
                 <li v-for="word in learningWords" :key="word.id" @click="showDefinition(word)">{{ word.word }}</li>
             </ul>
         </div>
         <div>
-            <h2 class="text-2xl font-bold mt-8">Learned Words</h2>
+            <h2 class="text-2xl font-bold">Learned Words</h2>
             <ul>
                 <li v-for="word in learnedWords" :key="word.id" @click="showDefinition(word)">{{ word.word }}</li>
             </ul>
