@@ -1,15 +1,19 @@
 <template>
     <div class="space-y-4">
         <div class="flex justify-center">
-            <button @click="getQuestion"
+            <select v-model="selectedTable" @change="fetchInitialQuestion" class="border border-gray-300 p-2 rounded-md mr-5">
+                <option disabled value="">Select a table</option>
+                <option v-for="(table, index) in tables" :key="index" :value="table.tableId">{{ table.name }}</option>
+            </select>
+            <button @click="getQuestion(selectedTable)"
                     class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out">
                 Get Question
             </button>
-            <button @click="getSpellingQuestion"
+            <button @click="getSpellingQuestion(selectedTable)"
                     class="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out">
                 Get Spelling Question
             </button>
-            <button @click="getImageQuestion"
+            <button @click="getImageQuestion(selectedTable)"
                     class="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out">
                 Get Image Question
             </button>
@@ -60,7 +64,7 @@
 
 <script>
 import apiService from '@/services/apiService';
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 
 export default {
     name: 'QuestionsComponent',
@@ -75,11 +79,13 @@ export default {
         let textAnswer = ''
         const image = ref(null);
         const error = ref(null);
+        const selectedTable = ref('');
+        const tables = ref([]);
 
-        async function getQuestion() {
+        async function getQuestion(tableId = null) {
             try {
                 error.value = null
-                const response= await apiService.getQuestion();
+                const response= await apiService.getQuestion(tableId);
                 questionData.value = response.data;
                 answer.value = '';
                 answerSubmitted.value = false;
@@ -92,10 +98,10 @@ export default {
             }
         }
 
-        async function getSpellingQuestion() {
+        async function getSpellingQuestion(tableId = null) {
             try {
                 error.value = null
-                const response = await apiService.getSpellingQuestion();
+                const response = await apiService.getSpellingQuestion(tableId);
                 questionData.value = response.data;
                 answer.value = '';
                 answerSubmitted.value = false;
@@ -108,10 +114,10 @@ export default {
             }
         }
 
-        async function getImageQuestion() {
+        async function getImageQuestion(tableId = null) {
             try {
                 error.value = null
-                const response = await apiService.getImageQuestion();
+                const response = await apiService.getImageQuestion(tableId);
                 questionData.value = response.data;
 
                 if ('error' in response.data) {
@@ -177,6 +183,27 @@ export default {
             }
         }
 
+        async function fetchTables() {
+            try {
+                const initialTables = await apiService.getInitialTables();
+                const userTables = await apiService.getUserTables();
+                tables.value = [...initialTables.data.tables, ...userTables.data.tables];
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function fetchInitialQuestion() {
+            if (selectedTable.value) {
+                const tableId = selectedTable.value;
+                await getQuestion(tableId);
+            }
+        }
+
+        onMounted(async () => {
+            await fetchTables();
+        });
+
         return {
             questionData,
             answer,
@@ -193,6 +220,9 @@ export default {
             image,
             textAnswer,
             error,
+            selectedTable,
+            tables,
+            fetchInitialQuestion,
         };
     }
 };
