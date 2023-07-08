@@ -11,6 +11,7 @@
                             <router-link to="/questions" class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out py-4 px-1 border-b-2 border-transparent hover:border-blue-500">Questions</router-link>
                             <router-link to="/word-info" class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out py-4 px-1 border-b-2 border-transparent hover:border-blue-500">Word Info</router-link>
                             <router-link to="/upload" class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out py-4 px-1 border-b-2 border-transparent hover:border-blue-500">Upload</router-link>
+                            <router-link to="/tables" class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out py-4 px-1 border-b-2 border-transparent hover:border-blue-500">Tables</router-link>
                             <router-link to="/profile" class="text-gray-700 hover:text-gray-900 font-medium tracking-wide transition-colors duration-200 ease-in-out py-4 px-1 border-b-2 border-transparent hover:border-blue-500">Profile</router-link>
                         </div>
                     </div>

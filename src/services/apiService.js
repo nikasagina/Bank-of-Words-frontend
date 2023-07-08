@@ -79,6 +79,8 @@ export default {
 
     // TableController
     createTable: (tableName) => httpClient.post('/table/create', null, { params: { tableName }} ),
+    deleteTable: (tableId) => httpClient.delete(`/table/delete/${tableId}`),
     getInitialTables: () => httpClient.get('/table/initial'),
     getUserTables: () => httpClient.get('/table/user'),
+    getTableWords: (tableId) => httpClient.get(`/table/words/${tableId}`),
 };

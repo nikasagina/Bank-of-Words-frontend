@@ -9,6 +9,7 @@ import StatisticsComponent from "@/components/StatisticsComponent.vue";
 import UploadComponent from "@/components/UploadComponent.vue";
 import WelcomeComponent from "@/components/WelcomeComponent.vue";
 import ProfileComponent from "@/components/ProfileComponent.vue";
+import TablesComponent from "@/components/TablesComponent.vue";
 import store from "@/store";
 
 const routes = [
@@ -21,6 +22,7 @@ const routes = [
     { path: '/statistics', component: StatisticsComponent },
     { path: '/upload', component: UploadComponent },
     {path: '/profile', component: ProfileComponent},
+    {path: '/tables', component: TablesComponent},
 ];
 
 export const router = createRouter({
