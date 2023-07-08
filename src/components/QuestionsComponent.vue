@@ -44,7 +44,7 @@
             </button>
             <button v-if="answerSubmitted"
                     class="inline-flex items-center ml-6 px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out mt-4"
-                    @click="getNextQuestion">
+                    @click="getNextQuestion(selectedTable)">
                 Next Question
             </button>
             <div v-if="answerSubmitted" class="mt-4">
@@ -55,7 +55,7 @@
                 <button v-if="answerIsCorrect"
                         class="inline-flex items-center mt-4 px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out"
                         @click="markWordAsLearned">
-                    Mark Word as Learned
+                    {{ isLearned ? 'Word Learned!' : 'Mark Word as Learned' }}
                 </button>
             </div>
         </div>
@@ -81,6 +81,8 @@ export default {
         const error = ref(null);
         const selectedTable = ref('');
         const tables = ref([]);
+        const answerId = ref(null);
+        const isLearned = ref(false);
 
         async function getQuestion(tableId = null) {
             try {
@@ -150,14 +152,16 @@ export default {
 
         async function submitAnswer() {
             try {
-
                 const response = await apiService.submitAnswer(answer.value, questionData.value.id);
                 answerSubmitted.value = true;
+                console.log(response.data)
                 const isCorrect = response.data.correct;
                 answerIsCorrect.value = isCorrect;
+                isLearned.value = false;
                 if (!isCorrect) {
                     correctAnswer.value = response.data.answer;
                 }
+                answerId.value = response.data.wordId;
                 showNextQuestion.value = true; // Show the "Next Question" button
             } catch (error) {
                 console.error(error);
@@ -166,20 +170,21 @@ export default {
 
         async function markWordAsLearned() {
             try {
-                await apiService.markWordAsLearned(answer.value);
+                await apiService.markWordAsLearned(answerId.value);
+                isLearned.value = true;
             } catch (error) {
                 console.error(error);
             }
         }
 
-        async function getNextQuestion() {
+        async function getNextQuestion(selectedTable) {
             // Get the next question based on the type of the last question
             if (lastQuestionType === 'normal') {
-                await getQuestion();
+                await getQuestion(selectedTable);
             } else if (lastQuestionType === 'spelling') {
-                await getSpellingQuestion();
+                await getSpellingQuestion(selectedTable);
             } else if (lastQuestionType === 'image') {
-                await getImageQuestion();
+                await getImageQuestion(selectedTable);
             }
         }
 
@@ -223,6 +228,8 @@ export default {
             selectedTable,
             tables,
             fetchInitialQuestion,
+            answerId,
+            isLearned,
         };
     }
 };

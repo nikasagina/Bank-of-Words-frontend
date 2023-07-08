@@ -22,7 +22,7 @@ export default {
     getQuestion: (tableId) => httpClient.get(`/question/default/${tableId || ''}`),
     getSpellingQuestion: (tableId) => httpClient.get(`/question/spelling/${tableId || ''}`),
     getImageQuestion: (tableId) => httpClient.get(`/question/image/${tableId || ''}`),
-    submitAnswer: (guess, id) => httpClient.post('/answer', null, { params: { guess, id } }),
+    submitAnswer: (guess, id) => httpClient.post('/question/answer', null, { params: { guess, id } }),
 
     // StatisticsController
     getUserStatistics: () => httpClient.get('/stats/user'),
@@ -66,9 +66,10 @@ export default {
     },
 
     // WordController
-    markWordAsLearned: (word) => httpClient.post('/word/learn', null, { params: { word }}),
-    getDefinitions: (word) => httpClient.get(`/word/${word}/definitions`),
-    getWordInfo: (word) => httpClient.get(`/word/${word}/info`),
+    markWordAsLearned: (wordId) => httpClient.post(`/word/learn/${wordId}`),
+    deleteWord: (wordId) => httpClient.delete(`/word/delete/${wordId}`),
+    getDefinitions: (word) => httpClient.get(`/word/definitions/${word}`),
+    getWordInfo: (word) => httpClient.get(`/word/info/${word}`),
 
     // UserController
     getUserInfo: () => httpClient.get('/user/info'),
