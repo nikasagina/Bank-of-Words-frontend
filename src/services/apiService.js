@@ -83,4 +83,9 @@ export default {
     getInitialTables: () => httpClient.get('/table/initial'),
     getUserTables: () => httpClient.get('/table/user'),
     getTableWords: (tableId) => httpClient.get(`/table/words/${tableId}`),
+
+    // FlashcardController
+    getFlashcardTextFront: (tableId) => httpClient.get(`/flashcard/front/text/${tableId}`),
+    getFlashcardImageFront: (tableId) => httpClient.get(`/flashcard/front/image/${tableId}`),
+    getFlashcardBack: (flashcardId) => httpClient.get(`/flashcard/back/${flashcardId}`),
 };

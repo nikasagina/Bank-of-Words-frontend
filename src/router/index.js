@@ -11,6 +11,7 @@ import WelcomeComponent from "@/components/WelcomeComponent.vue";
 import ProfileComponent from "@/components/ProfileComponent.vue";
 import TablesComponent from "@/components/TablesComponent.vue";
 import store from "@/store";
+import FlashcardComponent from "@/components/FlashcardComponent.vue";
 
 const routes = [
     { path: '/', component: WelcomeComponent },
@@ -23,6 +24,7 @@ const routes = [
     { path: '/upload', component: UploadComponent },
     {path: '/profile', component: ProfileComponent},
     {path: '/tables', component: TablesComponent},
+    {path: '/flashcards', component: FlashcardComponent},
 ];
 
 export const router = createRouter({
