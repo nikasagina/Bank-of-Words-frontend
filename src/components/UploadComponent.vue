@@ -2,7 +2,7 @@
     <div class="max-w-xg mx-auto p-4">
         <h2 class="text-3xl mb-4 font-bold">Upload</h2>
         <div class="flex-1">
-            <select v-model="selectedTable" class="border border-gray-300 p-2 rounded-md mr-5" style="width: 130px" @click="fetchTables()">
+            <select v-model="selectedTable" class="border border-gray-300 p-2 rounded-md mr-5" style="width: 130px">
                 <option disabled value="">Select a table</option>
                 <option v-for="(table, index) in tables" :key="index" :value="table.tableId">{{ table.name }}</option>
             </select>
@@ -98,7 +98,7 @@
                 </div>
             </form>
         </div>
-        <div v-if="message && mode === 'word'" class="mt-4 text-green-500 font-medium">
+        <div v-if="message" class="mt-4 text-green-500 font-medium">
             {{ message }}
         </div>
         <div v-else-if="error" class="mt-4 text-red-500 font-medium">
@@ -167,10 +167,10 @@ export default {
             try {
                 const response = await apiService.uploadWord(tableId, this.word, this.definition, this.image);
                 if (response.data.successful) {
-                    this.message = 'Word uploaded successfully.';
+                    this.message = `Word uploaded successfully: ${this.word}`;
                     this.error = '';
                 } else {
-                    this.error = 'You already have the word added.';
+                    this.error = `You already have the word added with the same definition: ${this.word}`;
                 }
             } catch (error) {
                 console.error(error);
@@ -208,12 +208,12 @@ export default {
         async createTable() {
             try {
                 const response = await apiService.createTable(this.tableName);
-                if (response.data.successful) {
-                    this.message = 'Table created successfully.';
+                console.log(response.data)
+                if (response.data.success) {
+                    this.message = `Table created successfully: ${this.tableName}`;
                     this.error = '';
                     this.tables.push(response.data.table);
                     this.selectedTable = response.data.table.tableId;
-                    await this.updateDropdown();
                 } else {
                     this.error = response.data.message;
                 }
