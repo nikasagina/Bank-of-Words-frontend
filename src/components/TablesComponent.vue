@@ -11,6 +11,8 @@
                         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2">Delete Table</button>
                 <button @click="toggleDeleteWordsMode" :disabled="!isUserTableSelected" :class="{ 'disabled-button': !isUserTableSelected }"
                         class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mx-2">Delete Words</button>
+                <button @click="exportSelectedTable()" :disabled="!isUserTableSelected" :class="{ 'disabled-button': !isUserTableSelected }"
+                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2">Export Table</button>
             </div>
         </div>
     </div>
@@ -25,6 +27,7 @@
         </div>
     </div>
 </template>
+
 <script>
 import apiService from "@/services/apiService";
 import { onMounted, ref } from "vue";
@@ -101,6 +104,24 @@ export default {
             }
         }
 
+        async function exportSelectedTable() {
+            try {
+                const response = await apiService.exportTable(selectedTable.value);
+                const data = JSON.stringify(response.data);
+                console.log(data)
+                const url = window.URL.createObjectURL(new Blob([data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `${response.data.tableName}.json`);
+                document.body.appendChild(link);
+                link.click();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
+
         onMounted(async () => {
             await fetchTables();
         });
@@ -116,6 +137,7 @@ export default {
             deleteWordsMode,
             selectedWords,
             toggleDeleteWordsMode,
+            exportSelectedTable,
         };
     },
 };

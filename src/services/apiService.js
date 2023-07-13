@@ -88,4 +88,16 @@ export default {
     getFlashcardTextFront: (tableId) => httpClient.get(`/flashcard/front/text/${tableId}`),
     getFlashcardImageFront: (tableId) => httpClient.get(`/flashcard/front/image/${tableId}`),
     getFlashcardBack: (flashcardId) => httpClient.get(`/flashcard/back/${flashcardId}`),
+
+    // TransferController
+    importTable: (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        return httpClient.post('/transfer/import', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+    },
+    exportTable: (tableName) => httpClient.get(`/transfer/export/${tableName}`)
 };
