@@ -91,12 +91,17 @@
                     <label for="tableName" class="block text-gray-700 font-medium mb-2">Table Name:</label>
                     <input id="tableName" v-model="tableName" required class="w-full px-3 py-2 rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
-                <div>
+                <div class="flex justify-between">
                     <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-md mt-4 font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
                         Create
                     </button>
+                    <label for="import-table"
+                           class="bg-indigo-600 text-white py-2 px-4 rounded-md mt-4 font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
+                        Import</label>
+                    <input id="import-table" type="file" name="file" style="display:none" @change="importSelectedTable($event)">
                 </div>
             </form>
+
         </div>
         <div v-if="message" class="mt-4 text-green-500 font-medium">
             {{ message }}
@@ -208,7 +213,7 @@ export default {
         async createTable() {
             try {
                 const response = await apiService.createTable(this.tableName);
-                console.log(response.data)
+
                 if (response.data.success) {
                     this.message = `Table created successfully: ${this.tableName}`;
                     this.error = '';
@@ -222,6 +227,26 @@ export default {
                 this.error = 'Failed to create table.';
             }
         },
+
+        async importSelectedTable(event) {
+            const file = event.target.files[0];
+
+            try {
+                const response = await apiService.importTable(file);
+                if (!response.data.error) {
+                    console.log("here")
+                    this.message = `Table imported successfully: ${response.data.table.name}`;
+                    this.error = '';
+                    this.tables.push(response.data.table);
+                    this.selectedTable = response.data.table.tableId;
+                } else {
+                    this.error = response.data.error;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
 
     },
 }
