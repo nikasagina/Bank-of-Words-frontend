@@ -214,13 +214,13 @@ export default {
             try {
                 const response = await apiService.createTable(this.tableName);
 
-                if (response.data.success) {
+                if (!response.data.error) {
                     this.message = `Table created successfully: ${this.tableName}`;
                     this.error = '';
                     this.tables.push(response.data.table);
                     this.selectedTable = response.data.table.tableId;
                 } else {
-                    this.error = response.data.message;
+                    this.error = response.data.error;
                 }
             } catch (error) {
                 console.error(error);
