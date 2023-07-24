@@ -1,20 +1,20 @@
 <template>
     <div class="space-y-4">
-        <div class="flex justify-center">
+        <div class="flex justify-center flex-col sm:flex-row sm:items-center gap-2">
             <select v-model="selectedTable" @change="fetchInitialQuestion" class="border border-gray-300 p-2 rounded-md mr-5">
                 <option disabled value="">Select a table</option>
                 <option v-for="(table, index) in tables" :key="index" :value="table.tableId">{{ table.name }}</option>
             </select>
             <button @click="getQuestion(selectedTable)"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out">
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out sm:w-auto">
                 Get Question
             </button>
             <button @click="getSpellingQuestion(selectedTable)"
-                    class="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out">
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out sm:ml-4 sm:w-auto">
                 Get Spelling Question
             </button>
             <button @click="getImageQuestion(selectedTable)"
-                    class="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out">
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ease-in-out sm:ml-4 sm:w-auto">
                 Get Image Question
             </button>
         </div>

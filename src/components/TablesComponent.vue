@@ -2,7 +2,7 @@
     <h2 class="text-3xl mb-4 font-bold mx-auto">Tables</h2>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mx-auto">
-            <div class="flex-1">
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
                 <select v-model="selectedTable" class="border border-gray-300 p-2 rounded-md mx-2" style="width: 130px" @change="fetchTableWords()">
                     <option disabled value="">Select a table</option>
                     <option v-for="(table, index) in tables" :key="index" :value="table.tableId">{{ table.name }}</option>

@@ -1,7 +1,7 @@
 <template>
     <div class="max-w-xg mx-auto p-4">
         <h2 class="text-3xl mb-4 font-bold">Upload</h2>
-        <div class="flex-1">
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
             <select v-model="selectedTable" class="border border-gray-300 p-2 rounded-md mr-5" style="width: 130px">
                 <option disabled value="">Select a table</option>
                 <option v-for="(table, index) in tables" :key="index" :value="table.tableId">{{ table.name }}</option>
@@ -9,21 +9,21 @@
             <button
                 @click="switchMode('table')"
                 :class="{'bg-gray-200 text-gray-700': mode === 'table', 'bg-gray-300 text-gray-600': mode !== 'table'}"
-                class="flex-1 py-2 px-6 rounded-l-md font-medium focus:outline-none"
+                class="flex-1 py-2 px-6 sm:rounded-l-md font-medium focus:outline-none"
             >
                 Create Table
             </button>
             <button
                 @click="switchMode('word')"
                 :class="{'bg-gray-200 text-gray-700': mode === 'word', 'bg-gray-300 text-gray-600': mode !== 'word'}"
-                class="flex-1 py-2 px-6 rounded-x-md font-medium focus:outline-none"
+                class="flex-1 py-2 px-6 sm:rounded-x-md font-medium focus:outline-none"
             >
                 Upload Word
             </button>
             <button
                 @click="switchMode('book')"
                 :class="{'bg-gray-200 text-gray-700': mode === 'book', 'bg-gray-300 text-gray-600': mode !== 'book'}"
-                class="flex-1 py-2 px-6 rounded-r-md font-medium focus:outline-none"
+                class="flex-1 py-2 px-6 sm:rounded-r-md font-medium focus:outline-none"
             >
                 Upload Book
             </button>
